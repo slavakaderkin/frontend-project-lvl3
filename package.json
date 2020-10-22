@@ -22,7 +22,6 @@
   "bugs": {
     "url": "https://github.com/Slavakaderkin/frontend-project-lvl3/issues"
   },
-  "type": "module",
   "homepage": "https://github.com/Slavakaderkin/frontend-project-lvl3#readme",
   "devDependencies": {
     "@babel/core": "^7.12.3",
