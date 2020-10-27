@@ -1,5 +1,11 @@
 /* eslint-disable no-param-reassign */
+import i18next from 'i18next';
 import onChange from 'on-change';
+
+const changeLanguage = (lng, { toggle }) => {
+  toggle.querySelectorAll('.btn').forEach((el) => el.classList.toggle('active'));
+  i18next.changeLanguage(lng);
+};
 
 const renderFormErrors = (field, { input, feedback }) => {
   if (field.valid) {
@@ -18,19 +24,18 @@ const renderForm = (value, { input, button }) => {
       input.removeAttribute('disabled');
       button.removeAttribute('disabled');
       input.select();
-      button.innerHTML = 'Add';
+      button.innerHTML = i18next.t('button.default');
       break;
     case 'failed':
       input.removeAttribute('disabled');
       button.removeAttribute('disabled');
       input.select();
-      button.innerHTML = 'Add';
+      button.innerHTML = i18next.t('button.default');
       break;
     case 'loading':
       input.setAttribute('disabled', true);
       button.setAttribute('disabled', true);
-      button.innerHTML = `<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-        Loading...`;
+      button.innerHTML = `<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>${i18next.t('button.loading')}`;
       break;
     default:
       throw new Error(`Unknown form status: ${value}`);
@@ -68,11 +73,18 @@ const renderItems = (items, { feeds }) => {
 };
 
 export default (state, elements) => {
+  elements.button.textContent = i18next.t('button.default');
+  elements.input.placeholder = i18next.t('placeholder');
+  elements.h1.textContent = i18next.t('h1');
+  elements.lead.textContent = i18next.t('lead');
+  elements.example.textContent = i18next.t('example');
+
   const mapping = {
     'form.fields.url': (url) => renderFormErrors(url, elements),
     'form.status': (value) => renderForm(value, elements),
     channels: (value) => renderChannels(value, elements),
     items: (value) => renderItems(value, elements),
+    lng: (value) => changeLanguage(value, elements),
   };
 
   const watchedState = onChange(state, (path, value) => {

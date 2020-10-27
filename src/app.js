@@ -1,17 +1,19 @@
 import axios from 'axios';
+import i18next from 'i18next';
 import * as _ from 'lodash';
 import * as yup from 'yup';
 
 import parse from './parser.js';
 import initView from './view.js';
+import resources from './locales';
 
 const validate = (value, feedLinks) => {
   const schema = yup
     .string()
     .required()
-    .notOneOf(feedLinks, 'you are already following this rss')
-    .url()
-    .matches(/.+\.rss$/, { message: 'error message', excludeEmptyString: false });
+    .notOneOf(feedLinks, i18next.t('errors.uniqueness'))
+    .url(i18next.t('errors.url'))
+    .matches(/.+\.rss$/, { message: i18next.t('errors.rss'), excludeEmptyString: false });
 
   try {
     schema.validateSync(value);
@@ -21,7 +23,13 @@ const validate = (value, feedLinks) => {
   }
 };
 
-export default () => {
+export default async () => {
+  await i18next.init({
+    lng: 'en',
+    debug: true,
+    resources,
+  });
+
   const state = {
     form: {
       status: 'filling', // loading, failed
@@ -35,23 +43,29 @@ export default () => {
     error: null,
     channels: [],
     items: [],
+    lng: 'en',
   };
 
   const form = document.querySelector('.rss-form');
-  const input = form.querySelector('input');
-  const button = form.querySelector('button');
-  const feedback = document.querySelector('div.invalid-feedback');
-  const feeds = document.querySelector('div.feeds');
-
   const elements = {
+    h1: document.querySelector('h1'),
+    lead: document.querySelector('.lead'),
+    example: document.querySelector('p.text-muted'),
     form,
-    input,
-    button,
-    feedback,
-    feeds,
+    input: form.querySelector('input'),
+    button: form.querySelector('button'),
+    feedback: document.querySelector('div.invalid-feedback'),
+    feeds: document.querySelector('div.feeds'),
+    toggle: document.querySelector('[data-toggle="language"]'),
   };
 
   const watched = initView(state, elements);
+
+  const inputs = elements.toggle.querySelectorAll('input');
+  inputs.forEach((input) => input.addEventListener('click', (e) => {
+    const lng = e.target.id;
+    watched.lng = lng;
+  }));
 
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
