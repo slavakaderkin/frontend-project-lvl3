@@ -1,7 +1,7 @@
 export default {
   translation: {
     h1: 'RSS агрегатор',
-    lead: 'Начните читать RSS сегодня. Это легко и мило.',
+    lead: 'Начните читать RSS сегодня. Это легко и приятно.',
     example: 'Пример: https://ru.hexlet.io/lessons.rss',
     placeholder: 'RSS фид',
     button: {

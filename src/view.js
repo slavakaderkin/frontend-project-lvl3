@@ -2,9 +2,17 @@
 import i18next from 'i18next';
 import onChange from 'on-change';
 
-const changeLanguage = (lng, { toggle }) => {
-  toggle.querySelectorAll('.btn').forEach((el) => el.classList.toggle('active'));
-  i18next.changeLanguage(lng);
+const renderContent = (elements) => {
+  elements.button.textContent = i18next.t('button.default');
+  elements.input.placeholder = i18next.t('placeholder');
+  elements.h1.textContent = i18next.t('h1');
+  elements.lead.textContent = i18next.t('lead');
+  elements.example.textContent = i18next.t('example');
+};
+
+const changeLanguage = (lng, elements) => {
+  elements.toggle.querySelectorAll('.btn').forEach((el) => el.classList.toggle('active'));
+  i18next.changeLanguage(lng, () => renderContent(elements));
 };
 
 const renderFormErrors = (field, { input, feedback }) => {
@@ -73,11 +81,7 @@ const renderItems = (items, { feeds }) => {
 };
 
 export default (state, elements) => {
-  elements.button.textContent = i18next.t('button.default');
-  elements.input.placeholder = i18next.t('placeholder');
-  elements.h1.textContent = i18next.t('h1');
-  elements.lead.textContent = i18next.t('lead');
-  elements.example.textContent = i18next.t('example');
+  renderContent(elements);
 
   const mapping = {
     'form.fields.url': (url) => renderFormErrors(url, elements),

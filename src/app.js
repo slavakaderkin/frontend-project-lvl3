@@ -71,8 +71,8 @@ export default async () => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
-    const feed = formData.get('url');
-    const error = validate(feed, _.map(watched.channels, 'url'));
+    const url = formData.get('url');
+    const error = validate(url, _.map(watched.channels, 'url'));
 
     if (error) {
       watched.form.fields.url = {
@@ -90,7 +90,7 @@ export default async () => {
     watched.form.status = 'loading';
 
     const proxy = 'https://cors-anywhere.herokuapp.com/';
-    axios.get(`${proxy}${feed}`)
+    axios.get(`${proxy}${url}`)
       .then((response) => {
         const { channel, items } = parse(response);
         watched.error = null;
