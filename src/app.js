@@ -89,7 +89,7 @@ export default async () => {
     };
     watched.form.status = 'loading';
 
-    const proxy = 'https://cors-anywhere.herokuapp.com/';
+    const proxy = 'https://thingproxy.freeboard.io/fetch/';
     axios.get(`${proxy}${url}`)
       .then((response) => {
         const { channel, items } = parse(response);
