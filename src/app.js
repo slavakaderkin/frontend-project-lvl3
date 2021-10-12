@@ -89,7 +89,7 @@ export default async () => {
     };
     watched.form.status = 'loading';
 
-    const proxy = 'https://thingproxy.freeboard.io/fetch/';
+    const proxy = 'https://api.allorigins.win/raw?url=';
     axios.get(`${proxy}${url}`)
       .then((response) => {
         const { channel, items } = parse(response);
