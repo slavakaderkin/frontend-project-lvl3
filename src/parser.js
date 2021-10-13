@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export default (response) => {
   const parser = new DOMParser();
   const xml = parser.parseFromString(response.data, 'text/xml');
@@ -7,8 +5,7 @@ export default (response) => {
   const channel = {
     title: xml.querySelector('channel>title').textContent,
     description: xml.querySelector('channel>description').textContent,
-    url: response.headers['x-final-url'],
-    id: _.uniqueId('channel_'),
+    url: response.config.url.split('=')[1],
   };
 
   const items = [...xml.querySelectorAll('item')].map((node) => (
@@ -17,8 +14,6 @@ export default (response) => {
       description: node.querySelector('description').textContent,
       link: node.querySelector('link').textContent,
       pubDate: node.querySelector('pubDate').textContent,
-      id: _.uniqueId(),
-      channelId: channel.id,
     }
   ));
 

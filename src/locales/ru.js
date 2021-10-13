@@ -13,5 +13,7 @@ export default {
       rss: 'URL адрес должен заканчиваться на .rss',
       uniqueness: 'Вы уже подписаны на этот RSS фид',
     },
+    posts: 'Посты',
+    feeds: 'Каналы',
   },
 };

@@ -7,6 +7,9 @@ import parse from './parser.js';
 import initView from './view.js';
 import resources from './locales';
 
+const proxy = 'https://api.allorigins.win/raw?url=';
+const updateTime = 5000;
+
 const validate = (value, feedLinks) => {
   const schema = yup
     .string()
@@ -21,6 +24,30 @@ const validate = (value, feedLinks) => {
   } catch (err) {
     return err.message;
   }
+};
+
+const postsUpdate = (watched) => {
+  watched.channels.forEach(({ url, id }) => {
+    console.log(`id ${id}, url ${url}`);
+
+    axios.get(`${proxy}${url}`)
+      .then((response) => {
+        const { items } = parse(response);
+
+        const newPosts = _.xorBy(watched.items, items, 'title');
+
+        if (newPosts.length > 0) {
+          // eslint-disable-next-line no-restricted-syntax
+          for (const item of newPosts) {
+            item.id = _.uniqueId();
+            item.channelId = id;
+          }
+          watched.items.push(...newPosts);
+        }
+      });
+
+    setTimeout(() => postsUpdate(watched), updateTime);
+  });
 };
 
 export default async () => {
@@ -56,6 +83,7 @@ export default async () => {
     button: form.querySelector('button'),
     feedback: document.querySelector('div.invalid-feedback'),
     feeds: document.querySelector('div.feeds'),
+    posts: document.querySelector('div.posts'),
     toggle: document.querySelector('[data-toggle="language"]'),
   };
 
@@ -89,14 +117,22 @@ export default async () => {
     };
     watched.form.status = 'loading';
 
-    const proxy = 'https://api.allorigins.win/raw?url=';
     axios.get(`${proxy}${url}`)
       .then((response) => {
         const { channel, items } = parse(response);
+        channel.id = _.uniqueId('channel_');
+
+        // eslint-disable-next-line no-restricted-syntax
+        for (const item of items) {
+          item.id = _.uniqueId();
+          item.channelId = channel.id;
+        }
+
         watched.error = null;
         watched.channels.push(channel);
         watched.items.push(...items);
         watched.form.status = 'filling';
+        setTimeout(() => postsUpdate(watched), updateTime);
       })
       .catch((err) => {
         watched.form.status = 'failed';

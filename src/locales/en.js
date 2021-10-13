@@ -13,5 +13,7 @@ export default {
       rss: 'This URL is a not RSS',
       uniqueness: 'You are already following this RSS',
     },
+    posts: 'Posts',
+    feeds: 'Channels',
   },
 };

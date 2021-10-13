@@ -8,6 +8,12 @@ const renderContent = (elements) => {
   elements.h1.textContent = i18next.t('h1');
   elements.lead.textContent = i18next.t('lead');
   elements.example.textContent = i18next.t('example');
+  if (elements.feeds.querySelector('h2')) {
+    elements.feeds.querySelector('h2').textContent = i18next.t('feeds');
+  }
+  if (elements.posts.querySelector('h2')) {
+    elements.posts.querySelector('h2').textContent = i18next.t('posts');
+  }
 };
 
 const changeLanguage = (lng, elements) => {
@@ -52,32 +58,43 @@ const renderForm = (value, { input, button }) => {
 
 const renderChannels = (channels, { feeds }) => {
   feeds.innerHTML = '';
+  const h2 = document.createElement('h2');
+  h2.innerHTML = i18next.t('feeds');
+  feeds.append(h2);
+
   const channelElements = channels.reverse()
     .map((channel) => {
       const div = document.createElement('div');
-      const h2 = document.createElement('h2');
+      const h3 = document.createElement('h3');
       const p = document.createElement('p');
       div.setAttribute('id', channel.id);
       div.classList.add('mt-4', 'p-4', 'border', 'rounded-sm');
-      h2.textContent = channel.title;
+      h3.textContent = channel.title;
       p.textContent = channel.description;
-      div.append(h2, p);
+      div.append(h3, p);
       return div;
     });
 
   feeds.append(...channelElements);
 };
 
-const renderItems = (items, { feeds }) => {
-  items.forEach((item) => {
-    const channel = feeds.querySelector(`#${item.channelId}`);
+const renderItems = (items, { posts }) => {
+  posts.innerHTML = '';
+  const h2 = document.createElement('h2');
+  h2.innerHTML = i18next.t('posts');
+  posts.append(h2);
+
+  const postsList = items.map((item) => {
     const div = document.createElement('div');
+    div.classList.add('p-3', 'mb-1', 'border', 'rounded-sm');
     const a = document.createElement('a');
     a.setAttribute('href', item.link);
+    a.setAttribute('target', '_blanck');
     a.textContent = item.title;
     div.append(a);
-    channel.append(div);
+    return div;
   });
+  posts.append(...postsList);
 };
 
 export default (state, elements) => {
