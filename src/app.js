@@ -13,7 +13,7 @@ const updateTime = 5000;
 const validate = (value, feedLinks) => {
   const schema = yup
     .string()
-    .required()
+    .required(i18next.t('errors.empty'))
     .notOneOf(feedLinks, i18next.t('errors.uniqueness'))
     .url(i18next.t('errors.url'))
     .matches(/.+\.rss$/, { message: i18next.t('errors.rss'), excludeEmptyString: false });

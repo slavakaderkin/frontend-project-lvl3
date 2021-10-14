@@ -13,12 +13,14 @@ export default {
       readMore: 'Читать полностью',
     },
     errors: {
-      url: 'В поле должен быть URL адрес',
-      rss: 'URL адрес должен заканчиваться на .rss',
-      uniqueness: 'Вы уже подписаны на этот RSS фид',
+      empty: 'Не должно быть пустым',
+      url: 'Ссылка должна быть валидным URL',
+      rss: 'Ресурс не содержит валидный RSS',
+      uniqueness: 'RSS уже существует',
+      network: 'Ошибка сети',
     },
     posts: 'Посты',
     feeds: 'Каналы',
-    previewButton: 'Cмотреть',
+    previewButton: 'Просмотр',
   },
 };
