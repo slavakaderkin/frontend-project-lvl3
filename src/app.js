@@ -7,7 +7,7 @@ import parse from './parser.js';
 import initView from './view.js';
 import resources from './locales';
 
-const proxy = 'https://api.allorigins.win/raw?url=';
+const proxy = 'https://hexlet-allorigins.herokuapp.com/get?url=';
 const updateTime = 5000;
 
 const validate = (value, feedLinks) => {
