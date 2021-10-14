@@ -2,6 +2,7 @@
   "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "Frontend project level 3 of hexlet",
+  "main": "./src/app.js",
   "keywords": [
     "hexlet-projects",
     "rss reader"
