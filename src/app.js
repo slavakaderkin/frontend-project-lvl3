@@ -26,33 +26,42 @@ const validate = (value, feedLinks) => {
   }
 };
 
-const postsUpdate = (watched) => {
-  watched.channels.forEach(({ url, id }) => {
+const setPreviewButttonHandlers = (posts, elements, state) => {
+  const postIds = posts.map(({ id }) => id);
+  postIds.forEach((id) => elements.posts.querySelector(`[data-id="${id}"]`)
+    .addEventListener('click', () => {
+      state.read.push(id);
+    }));
+};
+
+const postsUpdate = (state, elements) => {
+  const acc = [];
+
+  state.channels.forEach(({ url, id }) => {
     console.log(`id ${id}, url ${url}`);
 
     axios.get(`${proxy}${url}`)
       .then((response) => {
         const { items } = parse(response);
-
-        const newPosts = _.xorBy(watched.items, items, 'title');
-
-        if (newPosts.length > 0) {
-          // eslint-disable-next-line no-restricted-syntax
-          for (const item of newPosts) {
-            item.id = _.uniqueId();
-            item.channelId = id;
-          }
-          watched.items.push(...newPosts);
-        }
+        items.forEach((item) => ({ ...item, channelId: id }));
+        acc.push(items);
       });
-
-    setTimeout(() => postsUpdate(watched), updateTime);
   });
+
+  const newPosts = acc
+    .filter(({ link: newLink }) => state.items.every(({ link }) => newLink !== link));
+
+  if (newPosts.length > 0) {
+    const postWithId = newPosts.map((item) => ({ ...item, id: _.uniqueId() }));
+    state.items.push(...postWithId);
+    setPreviewButttonHandlers(postWithId, elements, state);
+  }
+  setTimeout(() => postsUpdate(state), updateTime);
 };
 
 export default async () => {
   await i18next.init({
-    lng: 'en',
+    lng: 'ru',
     debug: true,
     resources,
   });
@@ -70,10 +79,12 @@ export default async () => {
     error: null,
     channels: [],
     items: [],
-    lng: 'en',
+    lng: 'ru',
+    read: [],
   };
 
   const form = document.querySelector('.rss-form');
+
   const elements = {
     h1: document.querySelector('h1'),
     lead: document.querySelector('.lead'),
@@ -85,12 +96,13 @@ export default async () => {
     feeds: document.querySelector('div.feeds'),
     posts: document.querySelector('div.posts'),
     toggle: document.querySelector('[data-toggle="language"]'),
+    modal: document.querySelector('#previewModal'),
   };
 
   const watched = initView(state, elements);
 
-  const inputs = elements.toggle.querySelectorAll('input');
-  inputs.forEach((input) => input.addEventListener('click', (e) => {
+  const lngButtons = elements.toggle.querySelectorAll('input');
+  lngButtons.forEach((input) => input.addEventListener('click', (e) => {
     const lng = e.target.id;
     watched.lng = lng;
   }));
@@ -122,17 +134,19 @@ export default async () => {
         const { channel, items } = parse(response);
         channel.id = _.uniqueId('channel_');
 
-        // eslint-disable-next-line no-restricted-syntax
-        for (const item of items) {
-          item.id = _.uniqueId();
-          item.channelId = channel.id;
-        }
+        const postsWithId = items
+          .map((item) => ({
+            ...item,
+            id: _.uniqueId(),
+            channelId: channel.id,
+          }));
 
         watched.error = null;
         watched.channels.push(channel);
-        watched.items.push(...items);
+        watched.items.push(...postsWithId);
         watched.form.status = 'filling';
-        setTimeout(() => postsUpdate(watched), updateTime);
+        setTimeout(() => postsUpdate(watched, elements), updateTime);
+        setPreviewButttonHandlers(postsWithId, elements, watched);
       })
       .catch((err) => {
         watched.form.status = 'failed';

@@ -8,6 +8,10 @@ export default {
       default: 'Подписаться',
       loading: 'Загрузка',
     },
+    modal: {
+      closeButton: 'Закрыть',
+      readMore: 'Читать полностью',
+    },
     errors: {
       url: 'В поле должен быть URL адрес',
       rss: 'URL адрес должен заканчиваться на .rss',
@@ -15,5 +19,6 @@ export default {
     },
     posts: 'Посты',
     feeds: 'Каналы',
+    previewButton: 'Cмотреть',
   },
 };

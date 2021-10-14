@@ -8,6 +8,10 @@ export default {
       default: 'Add',
       loading: 'Loading',
     },
+    modal: {
+      closeButton: 'Close',
+      readMore: 'Read more',
+    },
     errors: {
       url: 'This field must be a URL',
       rss: 'This URL is a not RSS',
@@ -15,5 +19,6 @@ export default {
     },
     posts: 'Posts',
     feeds: 'Channels',
+    previewButton: 'Preview',
   },
 };

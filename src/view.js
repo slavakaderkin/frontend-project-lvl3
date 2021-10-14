@@ -8,12 +8,17 @@ const renderContent = (elements) => {
   elements.h1.textContent = i18next.t('h1');
   elements.lead.textContent = i18next.t('lead');
   elements.example.textContent = i18next.t('example');
+  elements.modal.querySelector('button.close-btn').textContent = i18next.t('modal.closeButton');
+  elements.modal.querySelector('a.read-more').textContent = i18next.t('modal.readMore');
   if (elements.feeds.querySelector('h2')) {
     elements.feeds.querySelector('h2').textContent = i18next.t('feeds');
   }
   if (elements.posts.querySelector('h2')) {
     elements.posts.querySelector('h2').textContent = i18next.t('posts');
   }
+  document.querySelectorAll('[data-target="#previewModal"]').forEach((btn) => {
+    btn.textContent = i18next.t('previewButton');
+  });
 };
 
 const changeLanguage = (lng, elements) => {
@@ -65,20 +70,46 @@ const renderChannels = (channels, { feeds }) => {
   const channelElements = channels.reverse()
     .map((channel) => {
       const div = document.createElement('div');
-      const h3 = document.createElement('h3');
+      const h4 = document.createElement('h4');
       const p = document.createElement('p');
       div.setAttribute('id', channel.id);
       div.classList.add('mt-4', 'p-4', 'border', 'rounded-sm');
-      h3.textContent = channel.title;
+      h4.textContent = channel.title;
       p.textContent = channel.description;
-      div.append(h3, p);
+      div.append(h4, p);
       return div;
     });
 
   feeds.append(...channelElements);
 };
 
-const renderItems = (items, { posts }) => {
+const createPreviewButton = (post, modal) => {
+  const button = document.createElement('button');
+  button.setAttribute('type', 'button');
+  button.classList.add('btn', 'btn-primary', 'btn-sm');
+  button.dataset.id = post.id;
+  button.dataset.toggle = 'modal';
+  button.dataset.target = '#previewModal';
+  button.textContent = i18next.t('previewButton');
+
+  button.addEventListener('click', () => {
+    modal.querySelector('.modal-title').textContent = post.title;
+    modal.querySelector('.modal-body').textContent = post.description;
+    modal.querySelector('a.read-more').setAttribute('href', post.link);
+    modal.querySelector('a.read-more').setAttribute('target', '_blanck');
+  });
+
+  return button;
+};
+
+const markAsRead = (read) => {
+  const id = read[read.length - 1];
+  const title = document.getElementById(id);
+  title.classList.remove('font-weight-bold');
+  title.classList.add('font-weight-normal');
+};
+
+const renderItems = (items, { posts, modal }) => {
   posts.innerHTML = '';
   const h2 = document.createElement('h2');
   h2.innerHTML = i18next.t('posts');
@@ -86,12 +117,16 @@ const renderItems = (items, { posts }) => {
 
   const postsList = items.map((item) => {
     const div = document.createElement('div');
-    div.classList.add('p-3', 'mb-1', 'border', 'rounded-sm');
+    div.classList.add('p-3', 'mt-4', 'border', 'rounded-sm', 'justify-content-between', 'd-flex');
     const a = document.createElement('a');
+    a.classList.add('font-weight-bold');
     a.setAttribute('href', item.link);
+    a.setAttribute('id', item.id);
     a.setAttribute('target', '_blanck');
     a.textContent = item.title;
+    const previewButton = createPreviewButton(item, modal);
     div.append(a);
+    div.append(previewButton);
     return div;
   });
   posts.append(...postsList);
@@ -106,6 +141,7 @@ export default (state, elements) => {
     channels: (value) => renderChannels(value, elements),
     items: (value) => renderItems(value, elements),
     lng: (value) => changeLanguage(value, elements),
+    read: (value) => markAsRead(value),
   };
 
   const watchedState = onChange(state, (path, value) => {
