@@ -139,10 +139,10 @@ export default async () => {
             channelId: channel.id,
           }));
 
+        watched.feedback = 'success';
         watched.channels.push(channel);
         watched.items.push(...postsWithId);
         watched.form.status = 'filling';
-        watched.feedback = 'success';
         setTimeout(() => postsUpdate(watched, elements), updateTime);
         setPreviewButttonHandlers(postsWithId, elements, watched);
       })
