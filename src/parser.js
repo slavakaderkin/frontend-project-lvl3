@@ -1,6 +1,7 @@
 export default (response) => {
   const parser = new DOMParser();
-  const xml = parser.parseFromString(response.data.contents, 'text/xml');
+  const data = response.data.contents || response.data;
+  const xml = parser.parseFromString(data, 'text/xml');
 
   const channel = {
     title: xml.querySelector('channel>title').textContent,
