@@ -90,7 +90,7 @@ export default async () => {
     form,
     input: form.querySelector('input'),
     button: form.querySelector('button'),
-    feedback: document.querySelector('div.feedback'),
+    feedback: document.querySelector('.feedback'),
     feeds: document.querySelector('div.feeds'),
     posts: document.querySelector('div.posts'),
     toggle: document.querySelector('[data-toggle="language"]'),
@@ -146,8 +146,7 @@ export default async () => {
         setTimeout(() => postsUpdate(watched, elements), updateTime);
         setPreviewButttonHandlers(postsWithId, elements, watched);
       })
-      .catch((_err) => {
-        console.log(_err);
+      .catch(() => {
         watched.form.status = 'failed';
         watched.feedback = 'failure';
       });
