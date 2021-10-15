@@ -1,11 +1,11 @@
 export default (response) => {
   const parser = new DOMParser();
-  const xml = parser.parseFromString(response.data, 'text/xml');
+  const xml = parser.parseFromString(response.data.contents, 'text/xml');
 
   const channel = {
     title: xml.querySelector('channel>title').textContent,
     description: xml.querySelector('channel>description').textContent,
-    url: response.config.url.split('=')[1],
+    url: response.data.status.url,
   };
 
   const items = [...xml.querySelectorAll('item')].map((node) => (

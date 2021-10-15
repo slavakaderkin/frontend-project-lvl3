@@ -19,6 +19,7 @@ export default {
       uniqueness: 'RSS уже существует',
       network: 'Ошибка сети',
     },
+    success: 'RSS успешно загружен',
     posts: 'Посты',
     feeds: 'Каналы',
     previewButton: 'Просмотр',

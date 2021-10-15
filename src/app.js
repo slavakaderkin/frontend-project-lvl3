@@ -7,7 +7,7 @@ import parse from './parser.js';
 import initView from './view.js';
 import resources from './locales';
 
-const proxy = 'https://hexlet-allorigins.herokuapp.com/get?url=';
+const proxy = 'https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=';
 const updateTime = 5000;
 
 const validate = (value, feedLinks) => {
@@ -38,8 +38,6 @@ const postsUpdate = (state, elements) => {
   const acc = [];
 
   state.channels.forEach(({ url, id }) => {
-    console.log(`id ${id}, url ${url}`);
-
     axios.get(`${proxy}${url}`)
       .then((response) => {
         const { items } = parse(response);
@@ -76,7 +74,7 @@ export default async () => {
         },
       },
     },
-    error: null,
+    feedback: null,
     channels: [],
     items: [],
     lng: 'ru',
@@ -92,7 +90,7 @@ export default async () => {
     form,
     input: form.querySelector('input'),
     button: form.querySelector('button'),
-    feedback: document.querySelector('div.invalid-feedback'),
+    feedback: document.querySelector('div.feedback'),
     feeds: document.querySelector('div.feeds'),
     posts: document.querySelector('div.posts'),
     toggle: document.querySelector('[data-toggle="language"]'),
@@ -141,16 +139,17 @@ export default async () => {
             channelId: channel.id,
           }));
 
-        watched.error = null;
         watched.channels.push(channel);
         watched.items.push(...postsWithId);
         watched.form.status = 'filling';
+        watched.feedback = 'success';
         setTimeout(() => postsUpdate(watched, elements), updateTime);
         setPreviewButttonHandlers(postsWithId, elements, watched);
       })
-      .catch((err) => {
+      .catch((_err) => {
+        console.log(_err);
         watched.form.status = 'failed';
-        watched.error = err.message;
+        watched.feedback = 'failure';
       });
   });
 };
