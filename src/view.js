@@ -29,10 +29,12 @@ const changeLanguage = (lng, elements) => {
 const renderFormErrors = (field, { input, feedback }) => {
   if (field.valid) {
     input.classList.remove('is-invalid');
+    input.removeAttribute('readonly');
     feedback.className = 'feedback';
     feedback.textContent = '';
   } else {
     input.classList.add('is-invalid');
+    input.setAttribute('readonly', true);
     feedback.className = 'text-danger feedback';
     feedback.textContent = field.error;
   }
