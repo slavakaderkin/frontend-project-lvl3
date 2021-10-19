@@ -146,7 +146,8 @@ export default async () => {
         setTimeout(() => postsUpdate(watched, elements), updateTime);
         setPreviewButttonHandlers(postsWithId, elements, watched);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(`ошибка: ${err.message}`);
         watched.form.status = 'failed';
         watched.feedback = 'failure';
       });
