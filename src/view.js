@@ -59,18 +59,21 @@ const renderForm = (value, { input, button }) => {
     case 'filling':
       input.value = '';
       input.removeAttribute('disabled');
+      input.emoveAttribute('readonly');
       button.removeAttribute('disabled');
       input.select();
       button.innerHTML = i18next.t('button.default');
       break;
     case 'failed':
       input.removeAttribute('disabled');
+      input.emoveAttribute('readonly');
       button.removeAttribute('disabled');
       input.select();
       button.innerHTML = i18next.t('button.default');
       break;
     case 'loading':
       input.setAttribute('disabled', true);
+      input.setAttribute('readonly', true);
       button.setAttribute('disabled', true);
       button.innerHTML = `<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>${i18next.t('button.loading')}`;
       break;
