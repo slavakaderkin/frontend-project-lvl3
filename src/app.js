@@ -147,7 +147,7 @@ export default async () => {
         setPreviewButttonHandlers(postsWithId, elements, watched);
       })
       .catch((err) => {
-        console.log(`ошибка: ${err.message}\n код${err.status}`);
+        console.log(err);
         watched.form.status = 'failed';
         watched.feedback = 'failure';
       });
