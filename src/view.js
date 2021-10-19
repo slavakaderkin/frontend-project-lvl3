@@ -66,7 +66,7 @@ const renderForm = (value, { input, button }) => {
       break;
     case 'failed':
       input.removeAttribute('disabled');
-      input.emoveAttribute('readonly');
+      input.removeAttribute('readonly');
       button.removeAttribute('disabled');
       input.select();
       button.innerHTML = i18next.t('button.default');
