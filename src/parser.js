@@ -6,7 +6,6 @@ export default (response) => {
   const channel = {
     title: xml.querySelector('channel>title').textContent,
     description: xml.querySelector('channel>description').textContent,
-    url: response.data.status.url,
   };
 
   const items = [...xml.querySelectorAll('item')].map((node) => (

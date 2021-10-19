@@ -131,6 +131,7 @@ export default async () => {
       .then((response) => {
         const { channel, items } = parse(response);
         channel.id = _.uniqueId('channel_');
+        channel.url = url;
 
         const postsWithId = items
           .map((item) => ({
