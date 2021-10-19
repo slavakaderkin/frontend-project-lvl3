@@ -59,7 +59,7 @@ const renderForm = (value, { input, button }) => {
     case 'filling':
       input.value = '';
       input.removeAttribute('disabled');
-      input.emoveAttribute('readonly');
+      input.removeAttribute('readonly');
       button.removeAttribute('disabled');
       input.select();
       button.innerHTML = i18next.t('button.default');
