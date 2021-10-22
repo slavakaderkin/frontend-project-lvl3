@@ -29,30 +29,33 @@ const changeLanguage = (lng, elements) => {
 const renderFormErrors = (field, { input, feedback }) => {
   if (field.valid) {
     input.classList.remove('is-invalid');
-    input.removeAttribute('readonly');
     feedback.className = 'feedback';
     feedback.textContent = '';
   } else {
     input.classList.add('is-invalid');
-    input.setAttribute('readonly', true);
     feedback.className = 'text-danger feedback';
     feedback.textContent = field.error;
   }
 };
 
-const renderFeedback = (value, { feedback }) => {
-  switch (value) {
-    case 'success':
-      feedback.innerHTML = `${i18next.t('success')}`;
-      feedback.className = 'text-success feedback';
-      break;
-    case 'failure':
-      feedback.innerHTML = `${i18next.t('errors.network')}`;
-      feedback.className = 'text-danger feedback';
-      break;
-    default:
-      feedback.innerHTML = '';
-      feedback.className = 'feedback';
+const renderFeedback = ({ error, errorType }, { feedback }) => {
+  if (error) {
+    switch (errorType) {
+      case 'parseError':
+        feedback.innerHTML = `${i18next.t('errors.parse')}`;
+        feedback.className = 'text-danger feedback';
+        break;
+      case 'networkError':
+        feedback.innerHTML = `${i18next.t('errors.network')}`;
+        feedback.className = 'text-danger feedback';
+        break;
+      default:
+        feedback.innerHTML = 'Uknoun error';
+        feedback.className = 'feedback text-danger';
+    }
+  } else {
+    feedback.innerHTML = `${i18next.t('success')}`;
+    feedback.className = 'text-success feedback';
   }
 };
 
@@ -165,7 +168,7 @@ export default (state, elements) => {
     items: (value) => renderItems(value, elements),
     lng: (value) => changeLanguage(value, elements),
     read: (value) => markAsRead(value),
-    feedback: (value) => renderFeedback(value, elements),
+    process: (value) => renderFeedback(value, elements),
   };
 
   const watchedState = onChange(state, (path, value) => {

@@ -15,8 +15,7 @@ const validate = (value, feedLinks) => {
     .string()
     .required(i18next.t('errors.empty'))
     .notOneOf(feedLinks, i18next.t('errors.uniqueness'))
-    .url(i18next.t('errors.url'))
-    .matches(/.+\.rss$/, { message: i18next.t('errors.rss'), excludeEmptyString: false });
+    .url(i18next.t('errors.url'));
 
   try {
     schema.validateSync(value);
@@ -74,7 +73,10 @@ export default async () => {
         },
       },
     },
-    feedback: null,
+    process: {
+      error: false,
+      errorType: '', // networkError, parseError
+    },
     channels: [],
     items: [],
     lng: 'ru',
@@ -140,17 +142,18 @@ export default async () => {
             channelId: channel.id,
           }));
 
-        watched.feedback = 'success';
         watched.channels.push(channel);
         watched.items.push(...postsWithId);
         watched.form.status = 'filling';
+        watched.process = { error: false, errorType: '' };
         setTimeout(() => postsUpdate(watched, elements), updateTime);
         setPreviewButttonHandlers(postsWithId, elements, watched);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.message);
         watched.form.status = 'failed';
-        watched.feedback = 'failure';
+        watched.process = (err.message === 'parseError') ? { error: true, errorType: err.message }
+          : { error: true, errorType: 'networkError' };
       });
   });
 };
