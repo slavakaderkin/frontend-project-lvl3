@@ -131,8 +131,8 @@ const createPreviewButton = (post, modal) => {
 const markAsRead = (read) => {
   const id = read[read.length - 1];
   const title = document.getElementById(id);
-  title.classList.remove('font-weight-bold');
-  title.classList.add('font-weight-normal');
+  title.classList.remove('font-weight-bold', 'fw-bold');
+  title.classList.add('font-weight-normal', 'fw-normal');
 };
 
 const renderItems = (items, { posts, modal }) => {
@@ -145,7 +145,7 @@ const renderItems = (items, { posts, modal }) => {
     const div = document.createElement('div');
     div.classList.add('p-3', 'mt-4', 'border', 'rounded-sm', 'justify-content-between', 'd-flex');
     const a = document.createElement('a');
-    a.classList.add('font-weight-bold');
+    a.classList.add('font-weight-bold', 'fw-bold');
     a.setAttribute('href', item.link);
     a.setAttribute('id', item.id);
     a.setAttribute('target', '_blanck');
